@@ -1,3 +1,3 @@
 # Statistical Methods
 ### author: Jeremi T
-### Repository for Statisticat Methods @ UJ
+### Repository for Statistical Methods @ UJ
