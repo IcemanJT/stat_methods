@@ -4,7 +4,6 @@ Contains simulation functions and theoretical formulas
 """
 
 import numpy as np
-import matplotlib.pyplot as plt
 from typing import Tuple, List, Dict
 
 
