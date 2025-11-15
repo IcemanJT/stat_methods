@@ -72,14 +72,13 @@ for idx, N in enumerate(N_values):
     
     # Plot distribution
     ax = axes[idx]
-    ax.hist(final_capitals, bins=min(50, max_capital - min_capital + 1), 
-            density=True, alpha=0.7, edgecolor='black')
+    ax.bar(k_values, P_k, width=0.8, edgecolor='black')
+    ax.set_xlabel('Capital k')
+    ax.set_ylabel('P(k)')
     ax.axvline(mean_capital, color='r', linestyle='--', linewidth=2, 
                label=f'Mean = {mean_capital:.1f}')
     ax.axvline(a, color='g', linestyle='--', linewidth=2, 
                label=f'Initial = {a}')
-    ax.set_xlabel('Capital k', fontsize=10)
-    ax.set_ylabel('Probability Density P(k)', fontsize=10)
     ax.set_title(f'N = {N}', fontsize=12)
     ax.legend(fontsize=9)
     ax.grid(True, alpha=0.3)
