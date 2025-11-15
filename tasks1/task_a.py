@@ -11,7 +11,6 @@ Find:
 - Comparison of the simulation result with the analytical (theoretical) result.
 """
 
-import numpy as np
 import matplotlib.pyplot as plt
 import os
 from gambler_ruin import simulate_multiple_games, theoretical_P_ruin_A
