@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+dist_const = np.load("dist_C.npy")
+
 # ===========================================
 # ZADANIE D – State-dependent logout probability
 # ===========================================
@@ -26,11 +28,6 @@ def simulate_state_dep(x0, N, rng):
         x = step_state_dep(x, rng)
         states[t] = x
     return states
-
-# For comparison load distribution from Task C
-# (OPTIONAL — user may paste data from zadanie_C)
-dist_const = np.load("dist_C.npy")
- # only if used together
 
 N_steps = 10000
 x0 = 0
