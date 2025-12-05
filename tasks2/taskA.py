@@ -1,72 +1,50 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from server_markov import build_transition_matrix_two_users, power_iteration
 
-# ===========================================
-# ZADANIE A – Transition matrix, P^N, convergence
-# ===========================================
+# ===========================
+# ZADANIE A
+# ===========================
 
-# Transition matrix for states 0,1,2
-P = np.array([
-    [0.64, 0.32, 0.04],
-    [0.40, 0.50, 0.10],
-    [0.25, 0.50, 0.25]
-])
-
-num_states = 3
-
+# Budowa macierzy P dla 2 użytkowników
+P = build_transition_matrix_two_users(p_login=0.2, p_stay_logged_in=0.5)
 print("Macierz przejścia P:")
 print(P)
 print("Suma wierszy:", P.sum(axis=1))
 
-# Power iteration: compute P^N until convergence
-N_max = 500
-eps = 1e-6
+# Iterowanie P^N
+P_powers, P_lim, converged_N = power_iteration(P, N_max=500, eps=1e-6)
 
-P_prev = np.eye(num_states)
-P_powers = [P_prev]
-converged_N = None
+if converged_N is not None:
+    print(f"Conwergencja wykryta przy N = {converged_N}")
+else:
+    print("Brak pełnej konwergencji w zadanym N_max.")
 
-for N in range(1, N_max + 1):
-    P_curr = P_prev @ P
-    P_powers.append(P_curr)
-
-    diff = np.max(np.abs(P_curr - P_prev))
-
-    if diff < eps and converged_N is None:
-        converged_N = N
-        print(f"Conwergencja przy N = {N}, różnica = {diff:.2e}")
-
-    P_prev = P_curr
-
-if converged_N is None:
-    print("UWAGA: brak pełnej konwergencji do N = 500.")
-
-P_lim = P_powers[-1]
-print("\nMacierz graniczna P^inf:")
+print("\nMacierz graniczna (P^N dla dużego N):")
 print(P_lim)
 
-# Approximated stationary distribution
 pi_approx = P_lim[0]
-print("\nPrzybliżona rozkład stacjonarny:", pi_approx)
+print("\nPrzybliżony rozkład stacjonarny:", pi_approx)
 
-# Exact stationary distribution:
+# Dokładny rozkład stacjonarny (wyliczony analitycznie)
 pi_exact = np.array([25/49, 20/49, 4/49])
-print("Dokładny:", pi_exact)
+print("Dokładny rozkład stacjonarny:", pi_exact)
 
-# Plot convergence of each entry P_ij(N)
-P_arr = np.stack(P_powers)
+# Przygotowanie danych do wykresu
+P_arr = np.stack(P_powers)    # shape: (N+1, 3, 3)
 Ns = np.arange(len(P_powers))
+num_states = P.shape[0]
 
-fig, axes = plt.subplots(3, 3, figsize=(12, 9), sharex=True)
-fig.suptitle("Konwergencja elementów macierzy P^N")
+fig, axes = plt.subplots(num_states, num_states, figsize=(12, 9), sharex=True)
+fig.suptitle("Konwergencja elementów P^N do rozkładu stacjonarnego")
 
-for i in range(3):
-    for j in range(3):
+for i in range(num_states):
+    for j in range(num_states):
         ax = axes[i, j]
-        ax.plot(Ns, P_arr[:, i, j], label=f"P^{N}[{i},{j}]")
-        ax.axhline(pi_exact[j], linestyle="--")
+        ax.plot(Ns, P_arr[:, i, j])
+        ax.axhline(pi_exact[j], linestyle='--')
         ax.grid(True)
-        if i == 2:
+        if i == num_states - 1:
             ax.set_xlabel("N")
         if j == 0:
             ax.set_ylabel(f"P[{i},{j}]")

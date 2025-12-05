@@ -1,45 +1,40 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from server_markov import (
+    step_100_users_const,
+    simulate_100_users,
+    empirical_distribution_from_states
+)
 
-# ===========================================
-# ZADANIE C – 100 users, constant probabilities
-# ===========================================
+# ===========================
+# ZADANIE C
+# ===========================
 
 N_users = 100
-login_p = 0.2
-stay_p_logged_in = 0.5
-
 rng = np.random.default_rng(456)
-
-def step_const(x, rng):
-    stays = rng.binomial(x, stay_p_logged_in)
-    logins = rng.binomial(N_users - x, login_p)
-    return stays + logins
-
-def simulate_const(x0, N, rng):
-    states = np.zeros(N + 1, dtype=int)
-    states[0] = x0
-    x = x0
-    for t in range(1, N + 1):
-        x = step_const(x, rng)
-        states[t] = x
-    return states
-
-N_steps = 10000
+N_steps = 10_000
 x0 = 0
 
-states = simulate_const(x0, N_steps, rng)
-counts = np.bincount(states, minlength=N_users + 1)
-dist = counts / counts.sum()
+states_const = simulate_100_users(
+    step_func=step_100_users_const,
+    x0=x0,
+    N_steps=N_steps,
+    rng=rng,
+    N_users=N_users,
+    p_login=0.2,
+    p_stay_logged_in=0.5
+)
 
-print("Suma rozkładu:", dist.sum())
+dist_const = empirical_distribution_from_states(states_const, N_users)
+print("Suma rozkładu (stałe prawdopodobieństwa):", dist_const.sum())
 
-plt.figure(figsize=(10,5))
-plt.bar(np.arange(N_users + 1), dist)
+plt.figure(figsize=(10, 5))
+plt.bar(np.arange(N_users + 1), dist_const)
 plt.grid(True, axis="y")
 plt.xlabel("Liczba zalogowanych użytkowników")
 plt.ylabel("Empiryczne prawdopodobieństwo")
-plt.title("Zadanie C – Rozkład liczby zalogowanych użytkowników")
+plt.title("Zadanie C – rozkład liczby zalogowanych użytkowników (stałe prawdopodobieństwa)")
 plt.show()
 
-np.save("dist_C.npy", dist)   # zapisuje rozkład do pliku
+# Można zapisać do pliku, jeśli chcesz używać poza importem:
+np.save("dist_const_C.npy", dist_const)
