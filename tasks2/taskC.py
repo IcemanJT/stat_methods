@@ -35,6 +35,3 @@ plt.xlabel("Liczba zalogowanych użytkowników")
 plt.ylabel("Empiryczne prawdopodobieństwo")
 plt.title("Zadanie C – rozkład liczby zalogowanych użytkowników (stałe prawdopodobieństwa)")
 plt.show()
-
-# Można zapisać do pliku, jeśli chcesz używać poza importem:
-np.save("dist_const_C.npy", dist_const)
