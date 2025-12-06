@@ -59,20 +59,23 @@ def rejection_sample_normal_rectangle_until_n(
 
     f_max = normal_pdf(0.0)
 
-    accepted = []
+    accepted: list[np.ndarray] = []
     total_candidates = 0
 
-    while len(accepted) < n_accept:
+    while sum(len(a) for a in accepted) < n_accept:
         xs = rng.uniform(x_min, x_max, size=batch_size)
         ys = rng.uniform(0.0, f_max, size=batch_size)
         fx = normal_pdf(xs)
+
         accepted_mask = ys <= fx
         acc_x = xs[accepted_mask]
+
         accepted.append(acc_x)
-        total_candidates += batch_size
+        total_candidates += xs.size
 
     accepted_all = np.concatenate(accepted)
     return accepted_all[:n_accept], total_candidates
+
 
 
 def rejection_sample_normal_lorentz_fixed_candidates(
@@ -125,10 +128,11 @@ def rejection_sample_normal_lorentz_until_n(
     if rng is None:
         rng = np.random.default_rng()
 
-    accepted = []
+    accepted: list[np.ndarray] = []
     total_candidates = 0
 
-    while len(accepted) < n_accept:
+    # dopóki łączna liczba zaakceptowanych < n_accept
+    while sum(len(a) for a in accepted) < n_accept:
         x = generate_cauchy(batch_size, rng=rng)
         u = rng.random(size=batch_size)
 
@@ -139,8 +143,10 @@ def rejection_sample_normal_lorentz_until_n(
 
         accepted_mask = u <= accept_prob
         acc_x = x[accepted_mask]
+
         accepted.append(acc_x)
-        total_candidates += batch_size
+        total_candidates += x.size  # liczba wszystkich kandydatów w tym batchu
 
     accepted_all = np.concatenate(accepted)
     return accepted_all[:n_accept], total_candidates
+
