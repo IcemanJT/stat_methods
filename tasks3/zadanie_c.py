@@ -66,12 +66,12 @@ def run_task_c():
         n_accepted_target_step2,
         x_min=-5.0,
         x_max=5.0,
-        batch_size=10_000,
+        batch_size=100,
         rng=rng,
     )
     t1 = time.time()
 
-    acceptance_rate2 = n_accepted_target_step2 / total_candidates_step2
+    acceptance_rate2 = accepted_step2.size / total_candidates_step2
     elapsed2 = t1 - t0
 
     print(f"\nKrok 2:")

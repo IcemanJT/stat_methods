@@ -66,12 +66,12 @@ def run_task_d():
     accepted_step2, total_candidates_step2 = rejection_sample_normal_lorentz_until_n(
         n_accepted_target_step2,
         C=C,
-        batch_size=10_000,
+        batch_size=100,
         rng=rng,
     )
     t1 = time.time()
 
-    acceptance_rate2 = n_accepted_target_step2 / total_candidates_step2
+    acceptance_rate2 = accepted_step2.size / total_candidates_step2
     elapsed2 = t1 - t0
 
     print(f"\nKrok 2:")
@@ -98,9 +98,6 @@ def run_task_d():
     print("  dzięki czemu znacznie większy procent kandydatów jest akceptowany.")
     print("- Oczekujemy wyższego odsetka akceptacji oraz krótszego czasu generacji 10^4 próbek")
     print("  w porównaniu z metodą prostokątną z zadania C.")
-    print("- Parametr C=1.6 dobrano tak, aby dla wszystkich x zachodziło f(x) <= C * g(x);")
-    print("  mniejsze C dałoby jeszcze większy odsetek akceptacji, ale nie może naruszać tego warunku.")
-
 
 if __name__ == "__main__":
     run_task_d()
